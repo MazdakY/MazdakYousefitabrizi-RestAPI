@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Check</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <header>
+            <h1>Global Weather</h1>
+        </header>
+        
+        <main>
+            <div class="input-group">
+                <label for="locations">Select City:</label>
+                <select id="locations">
+                    <option value="">-- Choose --</option>
+                    <option value="Toronto">Toronto</option>
+                    <option value="Vancouver">Vancouver</option>
+                    <option value="New York">New York</option>
+                    <option value="London">London</option>
+                    <option value="Tokyo">Tokyo</option>
+                </select>
+            </div>
+
+            <div id="display" class="hidden">
+                <h2 id="city"></h2>
+                <div class="weather-info">
+                    <img id="icon" src="" alt="Weather condition">
+                    <div class="details">
+                        <span id="temp"></span>
+                        <p id="text"></p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
