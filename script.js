@@ -1,46 +1,39 @@
 const apiKey = 'ea7cb3c136cc4037acf52550260502';
-const baseUrl = 'https://api.weatherapi.com/v1/current.json';
+const weatherSelect = document.getElementById('locations');
+const infoBox = document.getElementById('display');
 
-const locationSelect = document.getElementById('locations');
-const displayDiv = document.getElementById('display');
-const cityHeader = document.getElementById('city');
-const iconImg = document.getElementById('icon');
-const tempSpan = document.getElementById('temp');
-const textP = document.getElementById('text');
+weatherSelect.addEventListener('change', async () => {
+    const cityValue = weatherSelect.value;
 
-locationSelect.addEventListener('change', function() {
-    const city = locationSelect.value;
-    
-    if (city) {
-        fetchWeatherData(city);
-    } else {
-        displayDiv.classList.add('hidden');
+    if (!cityValue) {
+        infoBox.classList.add('hidden');
+        return; 
+    }
+
+    try {
+        const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${cityValue}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error("Data not found");
+        }
+
+        const data = await response.json();
+
+        // Show the display area
+        infoBox.classList.remove('hidden');
+        
+        // Update the UI elements
+        document.getElementById('city').textContent = data.location.name;
+        document.getElementById('temp').textContent = Math.round(data.current.temp_c) + "°C";
+        document.getElementById('text').textContent = data.current.condition.text;
+        
+        // Fix the icon URL and update image
+        const iconUrl = "https:" + data.current.condition.icon;
+        document.getElementById('icon').src = iconUrl;
+
+    } catch (err) {
+        console.log("Fetch error:", err);
+        alert("Could not load weather. Please try again.");
     }
 });
-
-function fetchWeatherData(query) {
-    const url = `${baseUrl}?key=${apiKey}&q=${query}`;
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error loading data');
-            }
-            return response.json();
-        })
-        .then(data => {
-            updateUI(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
-}
-
-function updateUI(data) {
-    displayDiv.classList.remove('hidden');
-    
-    cityHeader.textContent = data.location.name;
-    tempSpan.textContent = Math.round(data.current.temp_c) + '°C';
-    textP.textContent = data.current.condition.text;
-    iconImg.src = 'https:' + data.current.condition.icon;
-}
